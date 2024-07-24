@@ -2,8 +2,7 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const verifyJWT = async (req, res, next) => {
   try {
-    const token = req.cookies?.lelo;
-
+    const token = req.cookies?.token;
     if (!token) {
       return res.status(400).json({ message: "invalid  token" });
     }
@@ -15,6 +14,7 @@ const verifyJWT = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
+    next();
     return res
       .status(500)
       .json({ message: "error processing the token request" });

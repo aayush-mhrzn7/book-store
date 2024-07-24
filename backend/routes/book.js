@@ -13,13 +13,13 @@ router.post("/add-book", verifyJWT, async (req, res) => {
       res.status(401).json({ message: "you are not authorized" });
     }
 
-    /*   if (
+    if (
       [title, author, description, language, price, url].some(
         (field) => field.trim() == ""
       )
     ) {
       return res.status(401).json({ message: "all the fields must be filled" });
-    } */
+    }
     const book = await Book.create({
       title,
       author,
@@ -41,20 +41,20 @@ router.post("/add-book", verifyJWT, async (req, res) => {
 router.patch("/update-book/:id", verifyJWT, async (req, res) => {
   try {
     const { id } = req.params;
-    /*   const userID = req.user?._id; */
-    /*  const user = await User.findById({ id });
+    const userID = req.user?._id;
+    const user = await User.findById({ userID });
 
     if (user.role !== "admin") {
       res.status(401).json({ message: "you are not authorized" });
-    } */
+    }
     const { title, author, description, language, price, url } = req.body;
-    /* if (
+    if (
       [title, author, description, language, price, url].some(
         (field) => field.trim() == ""
       )
     ) {
       return res.status(401).json({ message: "all the fields must be filled" });
-    } */
+    }
     const book = await Book.findByIdAndUpdate(id, {
       title,
       author,
@@ -66,9 +66,9 @@ router.patch("/update-book/:id", verifyJWT, async (req, res) => {
     if (!book) {
       return res.status(401).json({ message: "error while updating book" });
     }
-    res.status(200).json({ message: "book has been updated" });
+    return res.status(200).json({ message: "book has been updated" });
   } catch (error) {
-    res
+    return res
       .status(401)
       .json({ message: "error while trying to update book by  user" });
   }
@@ -89,7 +89,7 @@ router.delete("/delete-book/:bookId", verifyJWT, async (req, res) => {
     }
     res.status(200).json({ message: "book has been dleetd" });
   } catch (error) {
-    res
+    return res
       .status(401)
       .json({ message: "error while trying to update book by  user" });
   }
@@ -115,9 +115,11 @@ router.get("/recently-added", async (req, res) => {
     if (!books) {
       return res.status(401).json({ message: "error while fetching book" });
     }
-    res.status(200).json({ message: "recently created books", data: books });
+    return res
+      .status(200)
+      .json({ message: "recently created books", data: books });
   } catch (error) {
-    res
+    return res
       .status(401)
       .json({ message: "error while trying to update book by  user" });
   }

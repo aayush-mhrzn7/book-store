@@ -34,13 +34,13 @@ router.delete("add-to-cart/:bookId", verifyJWT, async (req, res) => {
     return res.status(500).json({ message: "error server" });
   }
 });
-router.get("cart", async (req, res) => {
+router.get("/cart", async (req, res) => {
   try {
     const id = req.user?._id;
     if (!id) {
-      return res.status(500).json({ message: "error server" });
+      return res.status(500).json({ message: "error no id exits " });
     }
-    const user = User.findById(id).populate("cart");
+    const user = await User.findById(id).populate("cart");
     const userCart = user.cart;
     return res
       .status(200)

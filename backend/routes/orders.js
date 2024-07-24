@@ -37,7 +37,7 @@ router.get("/order-history", verifyJWT, async (req, res) => {
       populate: { path: "book" },
     });
     const orderdata = user.orders;
-    return res.status(200).json({ orderDAta: orderdata, message: "suceess " });
+    return res.status(200).json({ orderData: orderdata, message: "suceess " });
   } catch (error) {
     return res.status(500).json({ message: "error occured" });
   }
@@ -46,7 +46,7 @@ router.patch("/update-status/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    const user = User.findById(req.user?._id);
+    const user = await User.findById(req.user?._id);
     if (user.role == "admin") {
       await Order.findByIdAndUpdate(id, { status: status });
       return res.status(200).json({ message: "status changed" });
