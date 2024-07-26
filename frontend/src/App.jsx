@@ -10,19 +10,88 @@ import Profile from "./pages/Profile";
 import { Provider } from "react-redux";
 import store from "../store/store";
 import Book from "./pages/Book";
+import Authentication from "./utils/authentication";
+import Favorates from "./pages/Favorates";
+import AddBook from "./pages/AddBook";
 function App() {
   return (
     <Provider store={store}>
       <Router>
         <Navbar />
         <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/all-books" element={<AllBooks />} />
-          <Route path="/book/:id" element={<Book />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route
+            exact
+            path="/"
+            element={
+              <Authentication>
+                <Home />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/all-books"
+            element={
+              <Authentication>
+                <AllBooks />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/book/:id"
+            element={
+              <Authentication>
+                <Book />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <Authentication authentication={false}>
+                <Signup />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <Authentication authentication={false}>
+                <Login />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/cart"
+            element={
+              <Authentication>
+                <Cart />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/add-book"
+            element={
+              <Authentication>
+                <AddBook />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Authentication>
+                <Profile />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/favorates"
+            element={
+              <Authentication>
+                <Favorates />
+              </Authentication>
+            }
+          />
         </Routes>
       </Router>
     </Provider>

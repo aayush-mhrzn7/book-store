@@ -1,11 +1,11 @@
 const router = require("express").Router();
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const verifyJWT = require("./userAuth");
+const verifyJWT = require("./verifyJWT");
 const bcrypt = require("bcrypt");
 //sign up
 router.post("/signup", async (req, res) => {
-  const { username, email, password, address } = req.body;
+  const { username, email, password, address, role } = req.body;
   console.log(req.body);
   if (
     [username, email, password, address].some((field) => field.trim() == "")
@@ -21,12 +21,13 @@ router.post("/signup", async (req, res) => {
     if (!emailValid) {
       return res.status(400).json({ message: "the email already exists " });
     }
-
+    const hashed = bcrypt.hashSync(password, 12);
     const user = await User.create({
       username: username,
-      password: password,
+      password: hashed,
       email: email,
       address: address,
+      role: role,
     });
     if (!user) {
       return res
@@ -45,13 +46,16 @@ router.post("/signup", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
       return res
         .status(401)
         .json({ messgae: "the email error when logging in " });
     }
-    const passwordCheck = bcrypt.compare(password, existingUser.password);
+
+    const passwordCheck = bcrypt.compareSync(password, existingUser.password);
+    console.log(passwordCheck);
     if (!passwordCheck) {
       return res.status(400).json({
         message:
@@ -61,8 +65,6 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       {
         _id: existingUser._id,
-        email: existingUser.email,
-        username: existingUser.username,
         role: existingUser.role,
       },
       process.env.JWT_SECRET,
@@ -71,8 +73,7 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    return res.status(200).cookie("token", token).json({
-      cookie: token,
+    return res.cookie("token", token).status(200).json({
       user: existingUser,
       message: "the user has sucessfully logged in ",
     });
@@ -116,7 +117,7 @@ router.patch("/update-address", verifyJWT, async (req, res) => {
 });
 router.patch("/logout", verifyJWT, async (req, res) => {
   try {
-    return res.clearCookie("lelo").json({ message: "logged out" });
+    return res.clearCookie("token").json({ message: "logged out" });
   } catch (error) {
     return res.status(500).json({ message: "error " });
   }

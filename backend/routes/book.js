@@ -1,16 +1,19 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const verifyJWT = require("./userAuth");
+const verifyJWT = require("./verifyJWT");
 const Book = require("../models/book");
 //add book
 router.post("/add-book", verifyJWT, async (req, res) => {
   try {
     const id = req.user?._id;
+    if (!id) {
+      return res.json({ message: "the id is not coming" });
+    }
     const { title, author, description, language, price, url } = req.body;
     const user = await User.findById(id);
 
     if (user.role !== "admin") {
-      res.status(401).json({ message: "you are not authorized" });
+      return res.status(401).json({ message: "you are not authorized" });
     }
 
     if (
@@ -29,13 +32,11 @@ router.post("/add-book", verifyJWT, async (req, res) => {
       url,
     });
     if (!book) {
-      return res
-        .status(401)
-        .json({ data: book, message: "error while getting user" });
+      return res.status(401).json({ message: "error while getting user" });
     }
-    res.status(200).json({ message: "book has been added" });
+    return res.status(200).json({ data: book, message: "book has been added" });
   } catch (error) {
-    res.status(401).json({ message: "error while getting user" });
+    return res.status(401).json({ message: "error while getting user caa" });
   }
 });
 router.patch("/update-book/:id", verifyJWT, async (req, res) => {
@@ -73,12 +74,13 @@ router.patch("/update-book/:id", verifyJWT, async (req, res) => {
       .json({ message: "error while trying to update book by  user" });
   }
 });
-router.delete("/delete-book/:bookId", verifyJWT, async (req, res) => {
+router.delete("/delete-book/:bookId", async (req, res) => {
   try {
     const id = req.user?._id;
-    const { bookId } = req.params;
-    const user = await User.findById({ id });
 
+    const { bookId } = req.params;
+    const user = await User.findById(id);
+    console.log(user);
     if (user.role !== "admin") {
       res.status(401).json({ message: "you are not authorized" });
     }

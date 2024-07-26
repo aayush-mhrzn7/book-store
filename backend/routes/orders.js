@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const verifyJWT = require("./userAuth");
+const verifyJWT = require("./verifyJWT");
 const Book = require("../models/book");
 const Order = require("../models/orders");
 
@@ -42,7 +42,7 @@ router.get("/order-history", verifyJWT, async (req, res) => {
     return res.status(500).json({ message: "error occured" });
   }
 });
-router.patch("/update-status/:id", async (req, res) => {
+router.patch("/update-status/:id", verifyJWT, async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;

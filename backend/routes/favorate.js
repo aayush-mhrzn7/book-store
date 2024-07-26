@@ -1,11 +1,12 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const verifyJWT = require("./userAuth");
+const verifyJWT = require("./verifyJWT");
 
 //add to favorate
 router.patch("/add-favorate/:bookId", verifyJWT, async (req, res) => {
   try {
     const { bookId } = req.params;
+    console.log(req.user);
     const user = await User.findById(req.user?._id);
     const isBookFavorate = user.favorates.includes(bookId);
     if (isBookFavorate) {

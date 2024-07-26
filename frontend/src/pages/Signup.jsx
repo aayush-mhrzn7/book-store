@@ -9,7 +9,7 @@ import config from "../config";
 function Signup() {
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
@@ -24,14 +24,10 @@ function Signup() {
         password: data.password,
         address: data.address,
       });
-
       alert(response.data.message);
-      dispatch(login());
       setTimeout(() => {
-        navigate("/");
+        navigate("/login");
       }, 1000);
-
-      console.log(response);
     } catch (error) {
       setLoginError(error);
     }
