@@ -77,7 +77,10 @@ function Login() {
               )}
             </div>
             {loginError && <p className="text-red-500">{loginError}</p>}
-            <button className="w-full bg-blue-300 p-2 rounded-lg" type="submit">
+            <button
+              className="w-full bg-blue-600 font-semibold text-white p-2 rounded-lg"
+              type="submit"
+            >
               Login
             </button>
           </form>

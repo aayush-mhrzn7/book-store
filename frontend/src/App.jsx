@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -7,12 +7,13 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "../store/store";
 import Book from "./pages/Book";
 import Authentication from "./utils/authentication";
 import Favorates from "./pages/Favorates";
 import AddBook from "./pages/AddBook";
+
 function App() {
   return (
     <Provider store={store}>

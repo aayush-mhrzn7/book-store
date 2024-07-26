@@ -28,7 +28,7 @@ function AllBooks() {
   console.log(payload);
   const navigate = useNavigate();
   return (
-    <div className="h-[90vh] w-full mb-40 p-10 font-primary">
+    <div className="h-[100vh] w-full mb-40 p-10 font-primary">
       {admin ? (
         <h1 className="text-3xl font-semibold capitalize py-6 ">hello admin</h1>
       ) : null}
@@ -38,7 +38,7 @@ function AllBooks() {
           {books.map((book, index) => (
             <div
               onClick={() => navigate(`/book/${book._id}`)}
-              className=" hover:scale-110 transition-all font-primary border-2 shadow-md p-4 rounded-lg "
+              className=" hover:scale-110 transition-all font-primary border-2 w-full shadow-md p-4 rounded-lg "
               key={index}
             >
               <div className="w-full">
@@ -57,7 +57,7 @@ function AllBooks() {
                     ? book.description.slice(0, 100) + "...."
                     : null}
                 </p>
-                <button className="font-semibold p-3 w-full rounded-lg bg-blue-300">
+                <button className="font-semibold p-3 w-full text-white  rounded-lg bg-blue-600">
                   Read more
                 </button>
               </div>

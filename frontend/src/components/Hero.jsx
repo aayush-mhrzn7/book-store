@@ -2,7 +2,7 @@ import React from "react";
 
 function Hero() {
   return (
-    <div className="flex font-primary justify-center items-center">
+    <div className="flex max-md:flex-wrap gap-4  font-primary justify-center items-center">
       <div>
         <h1 className="text-5xl my-2">Find new reads</h1>
         <p className="text-xl my-3 ">

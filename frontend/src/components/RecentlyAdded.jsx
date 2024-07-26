@@ -42,7 +42,7 @@ function RecentlyAdded() {
                     ? book.description.slice(0, 90) + "..."
                     : null}
                 </p>
-                <button className="px-3 py-2 w-full bg-blue-300 rounded-lg my-3">
+                <button className="px-3 py-2 w-full text-white font-semibold bg-blue-600 rounded-lg my-3">
                   Read more
                 </button>
               </div>
