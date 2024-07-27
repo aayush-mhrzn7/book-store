@@ -3,10 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
 import { useSelector } from "react-redux";
+import Modal from "./Modal";
 
 function Book() {
   const { id } = useParams();
   const [book, setBook] = useState([]);
+  const [open, setopen] = useState(false);
+  const setOpen = () => {
+    setopen(!open);
+  };
   const navigate = useNavigate();
   //getting book information
   useEffect(() => {
@@ -18,7 +23,6 @@ function Book() {
   }, []);
   //getting admin
   const payload = useSelector((state) => state.auth.data.role);
-  console.log(payload);
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
     if (payload != "admin") {
@@ -43,8 +47,10 @@ function Book() {
       alert("Book hass been sucessfully deleted");
     } else alert("Error during deletind a book");
   }
+  async function UpdateBook(id) {}
   return (
     <section className="w-full h-[90vh] p-10 font-primary">
+      {open ? <Modal id={book._id} /> : null}
       <div className="flex gap-10">
         <div className="w-1/3">
           <h1 className="text-3xl font-semibold mb-8">{book.title}</h1>
@@ -73,7 +79,7 @@ function Book() {
               </button>
               <button
                 onClick={() => {
-                  navigate;
+                  setOpen();
                 }}
                 className="cursor-pointer hover:scale-110 transition-all p-3 bg-yellow-400 mr-4 rounded-lg font-semibold my-4"
               >

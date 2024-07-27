@@ -9,7 +9,10 @@ const verifyJWT = async (req, res, next) => {
     if (!token) {
       return res.status(400).json({ message: "failed to authorize request" });
     }
-    const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decodedToken = await jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET
+    );
     const user = await User.findById(decodedToken?._id);
     if (!user) {
       return res.status(400).json({ message: "failed to delete" });

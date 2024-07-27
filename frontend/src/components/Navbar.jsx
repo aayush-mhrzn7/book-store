@@ -8,7 +8,7 @@ import config from "../config";
 function Navbar() {
   const status = useSelector((state) => state.auth.status);
   const payload = useSelector((state) => state.auth.data?.role);
-  console.log(payload);
+
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
     if (payload != "admin") {
@@ -17,7 +17,7 @@ function Navbar() {
       setAdmin(true);
     }
   }, [payload]);
-  console.log(status);
+
   const Links = [
     {
       name: "Home",

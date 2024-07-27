@@ -10,13 +10,11 @@ function AllBooks() {
   useEffect(() => {
     const fetch = async () => {
       const response = await axios.get(`${config.backendUrl}all-books`);
-
       setBooks(response.data.data);
     };
     fetch();
   }, []);
   const payload = useSelector((state) => state.auth.data.role);
-  console.log(payload);
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
     if (payload != "admin") {
@@ -25,7 +23,6 @@ function AllBooks() {
       setAdmin(true);
     }
   }, [payload]);
-  console.log(payload);
   const navigate = useNavigate();
   return (
     <div className="h-[100vh] w-full mb-40 p-10 font-primary">

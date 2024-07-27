@@ -28,10 +28,9 @@ function Login() {
         { withCredentials: true }
       );
       setLoading(false);
-      console.log(response.data.user);
+
       dispatch(login(response.data.user));
       navigate("/");
-      console.log(response.data);
     } catch (error) {
       setLoading(false);
       console.error(error);

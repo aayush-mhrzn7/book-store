@@ -1,9 +1,9 @@
 const express = require("express");
 const { connectDB } = require("./connect/connectDB");
 var cookieParser = require("cookie-parser");
-const app = express();
 const cors = require("cors");
 require("dotenv").config();
+const app = express();
 //middilewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
