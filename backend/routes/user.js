@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 //sign up
 router.post("/signup", async (req, res) => {
   const { username, email, password, address, role } = req.body;
-  console.log(req.body);
+
   if (
     [username, email, password, address].some((field) => field.trim() == "")
   ) {
@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
     }
 
     const passwordCheck = bcrypt.compareSync(password, existingUser.password);
-    console.log(passwordCheck);
+
     if (!passwordCheck) {
       return res.status(400).json({
         message:
@@ -91,45 +91,39 @@ router.post("/login", async (req, res) => {
 router.get("/get-user", verifyJWT, async (req, res) => {
   try {
     const user = await User.findById(req.user?._id);
-    console.log(user);
+
     return res.status(200).json({ data: user, message: "sucess" });
   } catch (error) {
     return res.status(500).json({ message: "error while getting user" });
   }
 });
-router.patch(
-  "/update-address",
-  /*  verifyJWT, */ async (req, res) => {
-    try {
-      const { address } = req.body;
-
-      const user = await User.findByIdAndUpdate(
-        req.user?._id,
-        {
-          $set: {
-            address: address,
-          },
+router.patch("/update-address", verifyJWT, async (req, res) => {
+  try {
+    const { address } = req.body;
+    console.log(address);
+    const user = await User.findByIdAndUpdate(
+      req.user?._id,
+      {
+        $set: {
+          address: address,
         },
-        {
-          new: true,
-        }
-      );
-      return res
-        .status(200)
-        .json({ data: user, message: "address changed sucessfully" });
-    } catch (error) {
-      return res.status(500).json({ message: "error " });
-    }
+      },
+      {
+        new: true,
+      }
+    );
+    return res
+      .status(200)
+      .json({ data: user, message: "address changed sucessfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "error " });
   }
-);
-router.patch(
-  "/logout",
-  /*  verifyJWT, */ async (req, res) => {
-    try {
-      return res.clearCookie("token").json({ message: "logged out" });
-    } catch (error) {
-      return res.status(500).json({ message: "error " });
-    }
+});
+router.patch("/logout", verifyJWT, async (req, res) => {
+  try {
+    return res.clearCookie("token").json({ message: "logged out" });
+  } catch (error) {
+    return res.status(500).json({ message: "error " });
   }
-);
+});
 module.exports = router;

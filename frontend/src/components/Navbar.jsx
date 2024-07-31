@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FiAlignJustify } from "react-icons/fi";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FiMinimize } from "react-icons/fi";
 import axios from "axios";
 import config from "../config";
+import { logout } from "../../store/authSlice";
 function Navbar() {
   const status = useSelector((state) => state.auth.status);
   const payload = useSelector((state) => state.auth.data?.role);
@@ -63,10 +64,17 @@ function Navbar() {
   const enableMobileViewing = () => {
     setMobile(!mobile);
   };
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const deleteSesssion = async () => {
-    await axios.patch(`${config.backendUrl}logout`);
-  };
+  async function Delete() {
+    await axios.patch(
+      `${config.backendUrl}logout`,
+      {},
+      { withCredentials: true }
+    );
+    dispatch(logout());
+    navigate("/login");
+  }
   return (
     <nav
       className={`shadow-xl z-50 ${
@@ -136,7 +144,7 @@ function Navbar() {
         {status ? (
           <button
             className=" hidden sm:block hover:text-blue-500 font-semibold  text-2xl sm:text-xl cursor-pointer  transition-all list-none capitalize"
-            onClick={() => deleteSesssion()}
+            onClick={() => Delete()}
           >
             logout
           </button>

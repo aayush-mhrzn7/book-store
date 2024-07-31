@@ -4,18 +4,23 @@ import axios from "axios";
 import config from "../config";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import Loader from "../components/Loader";
 
 function AllBooks() {
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const payload = useSelector((state) => state.auth.data.role);
+  const [admin, setAdmin] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetch = async () => {
+      setLoading(true);
       const response = await axios.get(`${config.backendUrl}all-books`);
       setBooks(response.data.data);
+      setLoading(false);
     };
     fetch();
   }, []);
-  const payload = useSelector((state) => state.auth.data.role);
-  const [admin, setAdmin] = useState(false);
   useEffect(() => {
     if (payload != "admin") {
       setAdmin(false);
@@ -23,8 +28,12 @@ function AllBooks() {
       setAdmin(true);
     }
   }, [payload]);
-  const navigate = useNavigate();
-  return (
+
+  return loading ? (
+    <div className="h-[100vh] w-full flex items-center justify-center">
+      <Loader />
+    </div>
+  ) : (
     <div className="h-[100vh] w-full mb-40 p-10 font-primary">
       {admin ? (
         <h1 className="text-3xl font-semibold capitalize py-6 ">hello admin</h1>

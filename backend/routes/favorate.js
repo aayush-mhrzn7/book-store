@@ -3,17 +3,21 @@ const User = require("../models/user");
 const verifyJWT = require("../middleware/verifyJWT.js");
 
 //add to favorate
-router.patch("/add-favorate/:bookId", verifyJWT, async (req, res) => {
+router.patch("/add-favorate/:id", verifyJWT, async (req, res) => {
   try {
-    const { bookId } = req.params;
-    console.log(req.user);
+    const { id } = req.params;
+
     const user = await User.findById(req.user?._id);
-    const isBookFavorate = user.favorates.includes(bookId);
+    const isBookFavorate = user.favorates.includes(id);
+
     if (isBookFavorate) {
-      return res.status(200).json({ message: "already like" });
+      const data = await User.findByIdAndUpdate(req.user?._id, {
+        $pull: { favorates: id },
+      });
+      return res.status(200).json({ data: data, message: " removed from fav" });
     }
     const data = await User.findByIdAndUpdate(req.user?._id, {
-      $push: { favorates: bookId },
+      $push: { favorates: id },
     });
     return res.status(200).json({ data: data, message: " liked " });
   } catch (error) {
@@ -31,14 +35,14 @@ router.get("/all-favorate", verifyJWT, async (req, res) => {
     return res.status(500).json({ message: "error server" });
   }
 });
-router.delete("delete-favorate/:bookId", verifyJWT, async (req, res) => {
+/* router.delete("delete-favorate/:id", verifyJWT, async (req, res) => {
   try {
-    const { bookId } = req.params;
+    const { id } = req.params;
     const user = await User.findById(req.user?._id);
-    const isBookFavorate = user.favorates.includes(bookId);
+    const isBookFavorate = user.favorates.includes(id);
     if (isBookFavorate) {
       await User.findByIdAndUpdate(req.user?._id, {
-        $pop: { favorites: bookId },
+        $pop: { favorites: id },
       });
     }
 
@@ -46,5 +50,5 @@ router.delete("delete-favorate/:bookId", verifyJWT, async (req, res) => {
   } catch (error) {
     return res.status(500).json({ message: "error server" });
   }
-});
+}); */
 module.exports = router;

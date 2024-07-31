@@ -29,9 +29,12 @@ function Modal({ id }) {
     setValue("price", data.price);
   }, [data]);
   const updateBook = async (data) => {
-    const response = await axios.patch(
-      `${config.backendUrl}update-book/${id}`,
-      data
+    const response = await axios.post(
+      `${config.backendUrl}updat-book/${id}`,
+      data,
+      {
+        withCredentials: true,
+      }
     );
 
     if (!response) {
@@ -48,7 +51,7 @@ function Modal({ id }) {
         onSubmit={handleSubmit(updateBook)}
         className="flex w-[80%] lg:w-[50%] p-20  inset-0   z-50 flex-col bg-white  shadow-2xl rounded-2xl "
       >
-        <label htmlFor="" className="font-semibold capitalize">
+        <label htmlFor="title" className="font-semibold capitalize">
           Title
         </label>
         <input
@@ -61,7 +64,7 @@ function Modal({ id }) {
           })}
         />
         {errors.title && <p>{errors.title.message}</p>}
-        <label htmlFor="" className="font-semibold capitalize">
+        <label htmlFor="author" className="font-semibold capitalize">
           author
         </label>
         <input
@@ -71,7 +74,7 @@ function Modal({ id }) {
           {...register("author", { required: true })}
         />
         {errors.author && <p>{errors.author.message}</p>}
-        <label htmlFor="" className="font-semibold capitalize">
+        <label htmlFor="description" className="font-semibold capitalize">
           description
         </label>
         <textarea
@@ -80,7 +83,7 @@ function Modal({ id }) {
           {...register("description", { required: true })}
         />
         {errors.description && <p>{errors.description.message}</p>}
-        <label htmlFor="" className="font-semibold capitalize">
+        <label htmlFor="url" className="font-semibold capitalize">
           url
         </label>
         <input
@@ -90,7 +93,7 @@ function Modal({ id }) {
           {...register("url", { required: true })}
         />
         {errors.url && <p>{errors.url.message}</p>}
-        <label htmlFor="" className="font-semibold capitalize">
+        <label htmlFor="language" className="font-semibold capitalize">
           language
         </label>
         <input
@@ -100,7 +103,7 @@ function Modal({ id }) {
           {...register("language", { required: true })}
         />
         {errors.language && <p>{errors.language.message}</p>}
-        <label htmlFor="" className="font-semibold capitalize">
+        <label htmlFor="price" className="font-semibold capitalize">
           price
         </label>
         <input

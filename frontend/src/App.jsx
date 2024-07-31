@@ -1,14 +1,18 @@
 import React, { useEffect } from "react";
 import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import AllBooks from "./pages/AllBooks";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import store from "../store/store";
+import { useDispatch } from "react-redux";
 import Book from "./pages/Book";
 import Authentication from "./utils/authentication";
 import Favorates from "./pages/Favorates";
@@ -18,17 +22,18 @@ import axios from "axios";
 import { login } from "../store/authSlice";
 
 function App() {
-  /*   const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
   useEffect(() => {
     (async () => {
-      const response = await axios.get(`${config.backendUrl}get-user`);
-      console.log("res", response);
-      if (!response) {
-        console.log("failed to authorize the user log in ");
+      const response = await axios.get(`${config.backendUrl}get-user`, {
+        withCredentials: true,
+      });
+      if (response.data.data) {
+        dispatch(login(response.data.data));
       }
-      dispatch(login(response.data.data));
     })();
-  }, []); */
+  }, []);
   return (
     <Router>
       <Navbar />

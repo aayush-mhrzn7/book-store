@@ -22,38 +22,49 @@ function Book() {
     fetch();
   }, []);
   //getting admin
-  const payload = useSelector((state) => state.auth.data.role);
+  const payload = useSelector((state) => state.auth.data);
+  console.log(payload);
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
-    if (payload != "admin") {
+    if (payload.role != "admin") {
       setAdmin(false);
     } else {
       setAdmin(true);
     }
-  }, [payload]);
+  }, []);
   async function addToFavorate(id) {
     console.log(id);
     const response = await axios.patch(
       `${config.backendUrl}add-favorate/${id}`,
+      {},
       {
         withCredentials: true,
       }
     );
     console.log(response);
+    navigate("/favorates");
   }
   async function DeleteBook(id) {
     const response = await axios.delete(
       `${config.backendUrl}delete-book/${id}`,
+      {},
       {
         withCredentials: true,
       }
     );
     console.log(response);
+
     if (response) {
       alert("Book hass been sucessfully deleted");
     } else alert("Error during deletind a book");
   }
-  //async function UpdateBook(id) {}
+  let favorate = payload.favorates.find((id) => id === book._id);
+  if (favorate) {
+    favorate = true;
+  } else {
+    favorate = false;
+  }
+  console.log(favorate);
   return (
     <section className="w-full h-[90vh] p-10 font-primary">
       <div className="flex gap-10">
@@ -97,14 +108,25 @@ function Book() {
               <button className=" cursor-pointer hover:scale-110 transition-all p-3 bg-blue-400 mr-4 rounded-lg font-semibold my-4">
                 Add to cart
               </button>
-              <button
-                onClick={() => {
-                  addToFavorate(book._id);
-                }}
-                className=" cursor-pointer hover:scale-110 transition-all p-3 bg-green-400 mr-4 rounded-lg font-semibold my-4"
-              >
-                Add to Favorates
-              </button>
+              {favorate ? (
+                <button
+                  onClick={() => {
+                    addToFavorate(book._id);
+                  }}
+                  className=" cursor-pointer hover:scale-110 transition-all p-3 bg-green-400 mr-4 rounded-lg font-semibold my-4"
+                >
+                  Remove from Favorates
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    addToFavorate(book._id);
+                  }}
+                  className=" cursor-pointer hover:scale-110 transition-all p-3 bg-green-400 mr-4 rounded-lg font-semibold my-4"
+                >
+                  Add to Favorates
+                </button>
+              )}
             </div>
           )}
         </div>
