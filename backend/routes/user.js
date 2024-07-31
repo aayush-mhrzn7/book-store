@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const verifyJWT = require("./verifyJWT");
+const verifyJWT = require("../middleware/verifyJWT");
 const bcrypt = require("bcrypt");
 //sign up
 router.post("/signup", async (req, res) => {
@@ -73,10 +73,14 @@ router.post("/login", async (req, res) => {
       }
     );
 
-    return res.cookie("token", token).status(200).json({
-      user: existingUser,
-      message: "the user has sucessfully logged in ",
-    });
+    return res
+      .cookie("token", token, { httpOnly: true, secure: true })
+      .status(200)
+      .json({
+        cookie: token,
+        user: existingUser,
+        message: "the user has sucessfully logged in ",
+      });
   } catch (error) {
     return res
       .status(500)
@@ -84,18 +88,15 @@ router.post("/login", async (req, res) => {
   }
 });
 //get user information
-router.get(
-  "/get-user",
-  /*  verifyJWT, */ async (req, res) => {
-    try {
-      const user = await User.findById(req.user?._id);
-      console.log(user);
-      return res.status(200).json({ data: user, message: "sucess" });
-    } catch (error) {
-      return res.status(500).json({ message: "error while getting user" });
-    }
+router.get("/get-user", verifyJWT, async (req, res) => {
+  try {
+    const user = await User.findById(req.user?._id);
+    console.log(user);
+    return res.status(200).json({ data: user, message: "sucess" });
+  } catch (error) {
+    return res.status(500).json({ message: "error while getting user" });
   }
-);
+});
 router.patch(
   "/update-address",
   /*  verifyJWT, */ async (req, res) => {

@@ -1,93 +1,81 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const verifyJWT = require("./verifyJWT");
+const verifyJWT = require("../middleware/verifyJWT.js");
 const Book = require("../models/book");
 //add book
-router.post(
-  "/add-book",
-  /* verifyJWT, */ async (req, res) => {
-    try {
-      console.log(req.cookies);
-      const id = req.user?._id;
-      if (!id) {
-        return res.json({ message: "the id is not coming" });
-      }
-      const { title, author, description, language, price, url } = req.body;
-      const user = await User.findById(id);
-
-      if (user.role !== "admin") {
-        return res.status(401).json({ message: "you are not authorized" });
-      }
-
-      if (
-        [title, author, description, language, price, url].some(
-          (field) => field.trim() == ""
-        )
-      ) {
-        return res
-          .status(401)
-          .json({ message: "all the fields must be filled" });
-      }
-      const book = await Book.create({
-        title,
-        author,
-        description,
-        language,
-        price,
-        url,
-      });
-      if (!book) {
-        return res.status(401).json({ message: "error while getting user" });
-      }
-      return res
-        .status(200)
-        .json({ data: book, message: "book has been added" });
-    } catch (error) {
-      return res.status(401).json({ message: "error while getting user caa" });
+router.post("/add-book", verifyJWT, async (req, res) => {
+  try {
+    console.log(req.cookies);
+    const id = req.user?._id;
+    if (!id) {
+      return res.json({ message: "the id is not coming" });
     }
-  }
-);
-router.patch(
-  "/update-book/:id",
-  /* verifyJWT, */ async (req, res) => {
-    try {
-      const { id } = req.params;
-      /*      const userID = req.user?._id; */
-      /* const user = await User.findById({ userID }); */
+    const { title, author, description, language, price, url } = req.body;
+    const user = await User.findById(id);
 
-      /*     if (user.role !== "admin") {
-        res.status(401).json({ message: "you are not authorized" });
-      } */
-      const { title, author, description, language, price, url } = req.body;
-      console.log(req.body);
-      /*   if (
-        [title, author, description, language, price, url].some(
-          (field) => field.trim() == ""
-        )
-      ) {
-        return res
-          .status(401)
-          .json({ message: "all the fields must be filled" });
-      } */
-      const book = await Book.findByIdAndUpdate(id, {
-        title,
-        author,
-        description,
-        language,
-        price,
-        url,
-      });
-      if (!book) {
-        return res.status(401).json({ message: "error while updating book" });
-      }
-      return res.status(200).json({ message: "book has been updated" });
-    } catch (error) {
-      return res
-        .status(401)
-        .json({ message: "error while trying to update book by  user" });
+    if (user.role !== "admin") {
+      return res.status(401).json({ message: "you are not authorized" });
     }
+
+    if (
+      [title, author, description, language, price, url].some(
+        (field) => field.trim() == ""
+      )
+    ) {
+      return res.status(401).json({ message: "all the fields must be filled" });
+    }
+    const book = await Book.create({
+      title,
+      author,
+      description,
+      language,
+      price,
+      url,
+    });
+    if (!book) {
+      return res.status(401).json({ message: "error while getting user" });
+    }
+    return res.status(200).json({ data: book, message: "book has been added" });
+  } catch (error) {
+    return res.status(401).json({ message: "error while getting user caa" });
   }
-);
+});
+router.patch("/update-book/:id", verifyJWT, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userID = req.user?._id;
+    const user = await User.findById({ userID });
+
+    if (user.role !== "admin") {
+      res.status(401).json({ message: "you are not authorized" });
+    }
+    const { title, author, description, language, price, url } = req.body;
+    console.log(req.body);
+    if (
+      [title, author, description, language, price, url].some(
+        (field) => field.trim() == ""
+      )
+    ) {
+      return res.status(401).json({ message: "all the fields must be filled" });
+    }
+    const book = await Book.findByIdAndUpdate(id, {
+      title,
+      author,
+      description,
+      language,
+      price,
+      url,
+    });
+    if (!book) {
+      return res.status(401).json({ message: "error while updating book" });
+    }
+    return res.status(200).json({ message: "book has been updated" });
+  } catch (error) {
+    return res
+      .status(401)
+      .json({ message: "error while trying to update book by  user" });
+  }
+});
 router.delete("/delete-book/:bookId", async (req, res) => {
   try {
     /*     const id = req.user?._id; */

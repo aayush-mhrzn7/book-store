@@ -34,23 +34,28 @@ function Book() {
   async function addToFavorate(id) {
     console.log(id);
     const response = await axios.patch(
-      `${config.backendUrl}add-favorate/${id}`
+      `${config.backendUrl}add-favorate/${id}`,
+      {
+        withCredentials: true,
+      }
     );
     console.log(response);
   }
   async function DeleteBook(id) {
     const response = await axios.delete(
-      `${config.backendUrl}delete-book/${id}`
+      `${config.backendUrl}delete-book/${id}`,
+      {
+        withCredentials: true,
+      }
     );
     console.log(response);
     if (response) {
       alert("Book hass been sucessfully deleted");
     } else alert("Error during deletind a book");
   }
-  async function UpdateBook(id) {}
+  //async function UpdateBook(id) {}
   return (
     <section className="w-full h-[90vh] p-10 font-primary">
-      {open ? <Modal id={book._id} /> : null}
       <div className="flex gap-10">
         <div className="w-1/3">
           <h1 className="text-3xl font-semibold mb-8">{book.title}</h1>
@@ -64,6 +69,7 @@ function Book() {
           <span className="capitalize font-semibold mb-3 inline-block p-3 bg-green-400  rounded-lg">
             {book.language}
           </span>
+          {open ? <Modal id={book._id} /> : null}
           <p className="text-xl">{book.description}</p>
           <h2 className="text-5xl my-10">
             {book.price}Rs <span className="inline-block text-2xl ">only</span>

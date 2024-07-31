@@ -25,15 +25,18 @@ function Login() {
           email: data.email,
           password: data.password,
         },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
+      console.log(response);
       setLoading(false);
 
       dispatch(login(response.data.user));
       navigate("/");
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      console.log(error);
       setLoginError(
         error.response?.data?.message || "An error occurred during login"
       );

@@ -6,7 +6,9 @@ function Favorates() {
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios.get(`${config.backendUrl}all-favorate`);
+      const response = await axios.get(`${config.backendUrl}all-favorate`, {
+        withCredentials: true,
+      });
       console.log(response);
       setData(response.data.data);
     };

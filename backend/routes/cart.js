@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const verifyJWT = require("./verifyJWT");
+const verifyJWT = require("../middleware/verifyJWT.js");
 
 module.exports = router;
 router.patch("add-to-cart/:bookId", verifyJWT, async (req, res) => {

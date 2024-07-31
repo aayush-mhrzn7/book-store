@@ -1,6 +1,6 @@
 const express = require("express");
 const { connectDB } = require("./connect/connectDB");
-var cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
@@ -26,7 +26,6 @@ app.use("/api/v1", Book);
 app.use("/api/v1", Favorate);
 app.use("/api/v1", Cart);
 app.use("/api/v1", Order);
-
 connectDB();
 app.listen(process.env.PORT, () => {
   console.log("the server is lisetning in port 8000");

@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const verifyJWT = require("./verifyJWT");
+const verifyJWT = require("../middleware/verifyJWT.js");
 
 //add to favorate
 router.patch("/add-favorate/:bookId", verifyJWT, async (req, res) => {
