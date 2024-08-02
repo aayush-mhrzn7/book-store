@@ -2,7 +2,7 @@ const router = require("express").Router();
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 const verifyJWT = require("../middleware/verifyJWT");
-const bcrypt = require("bcrypt");
+/* const bcrypt = require("bcrypt"); */
 //sign up
 router.post("/signup", async (req, res) => {
   const { username, email, password, address, role } = req.body;
@@ -21,10 +21,10 @@ router.post("/signup", async (req, res) => {
     if (!emailValid) {
       return res.status(400).json({ message: "the email already exists " });
     }
-    const hashed = bcrypt.hashSync(password, 12);
+    /*     const hashed = bcrypt.hashSync(password, 12); */
     const user = await User.create({
       username: username,
-      password: hashed,
+      password: password,
       email: email,
       address: address,
       role: role,
@@ -54,14 +54,14 @@ router.post("/login", async (req, res) => {
         .json({ messgae: "the email error when logging in " });
     }
 
-    const passwordCheck = bcrypt.compareSync(password, existingUser.password);
+    //const passwordCheck = bcrypt.compareSync(password, existingUser.password);
 
-    if (!passwordCheck) {
+    /*  if (!passwordCheck) {
       return res.status(400).json({
         message:
           "the password that you have kept doesnt match the old password",
       });
-    }
+    } */
     const token = jwt.sign(
       {
         _id: existingUser._id,
