@@ -11,7 +11,7 @@ app.use(express.static("public"));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://book-store-front-g4rv.onrender.com",
+    origin: "*",
     credentials: true,
   })
 );
