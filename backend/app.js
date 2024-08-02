@@ -27,6 +27,6 @@ app.use("/api/v1", Favorate);
 app.use("/api/v1", Cart);
 app.use("/api/v1", Order);
 connectDB();
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 8000, () => {
   console.log("the server is lisetning in port 8000");
 });
