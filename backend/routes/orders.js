@@ -56,4 +56,19 @@ router.patch("/update-status/:id", verifyJWT, async (req, res) => {
     return res.status(500).json({ message: "error occured" });
   }
 });
+router.get("get-orders", verifyJWT, async (req, res) => {
+  try {
+    const userData = await User.findById(req.user?._id)
+      .populate({
+        path: "Book",
+      })
+      .populate({
+        path: "User",
+      })
+      .sort({ createdAt: -1 });
+    return res.status(200).json({ data: userData, message: "sucess" });
+  } catch (error) {
+    return res.status(500).json({ message: "error occured" });
+  }
+});
 module.exports = router;

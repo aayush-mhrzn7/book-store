@@ -1,42 +1,33 @@
 const router = require("express").Router();
 const User = require("../models/user");
-const verifyJWT = require("../middleware/verifyJWT.js");
+const verifyJWT = require("../middleware/verifyJWT");
 
-module.exports = router;
-router.patch("add-to-cart/:bookId", verifyJWT, async (req, res) => {
+router.patch("/add-cart/:id", verifyJWT, async (req, res) => {
   try {
-    const { bookId } = req.params;
+    const { id } = req.params;
     const user = await User.findById(req.user?._id);
-    const isBookInCart = user.orders.includes(bookId);
-    if (isBookInCart) {
-      return res.status(200).json({ message: "already like" });
-    }
-    await User.findByIdAndUpdate(req.user?._id, {
-      $push: { cart: bookId },
-    });
-    return res.status(200).json({ message: " added cart" });
-  } catch (error) {
-    return res.status(500).json({ message: "error server" });
-  }
-});
-router.delete("add-to-cart/:bookId", verifyJWT, async (req, res) => {
-  try {
-    const { bookId } = req.params;
-    const user = await User.findById(req.user?._id);
-    const isBookInCart = user.orders.includes(bookId);
+    const isBookInCart = user.cart.includes(id);
+    console.log(isBookInCart);
     if (isBookInCart) {
       await User.findByIdAndUpdate(req.user?._id, {
-        $pop: { cart: bookId },
+        $pull: { cart: id },
       });
+      return res.status(200).json({ message: "already incart so removed" });
     }
-    return res.status(200).json({ message: " removed cart" });
+    const data = await User.findByIdAndUpdate(req.user?._id, {
+      $push: { cart: id },
+    });
+
+    return res.status(200).json({ data: data, message: " added cart" });
   } catch (error) {
     return res.status(500).json({ message: "error server" });
   }
 });
-router.get("/cart", async (req, res) => {
+
+router.get("/cart", verifyJWT, async (req, res) => {
   try {
     const id = req.user?._id;
+
     if (!id) {
       return res.status(500).json({ message: "error no id exits " });
     }

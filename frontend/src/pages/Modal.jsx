@@ -29,8 +29,8 @@ function Modal({ id }) {
     setValue("price", data.price);
   }, [data]);
   const updateBook = async (data) => {
-    const response = await axios.post(
-      `${config.backendUrl}updat-book/${id}`,
+    const response = await axios.patch(
+      `${config.backendUrl}update-book/${id}`,
       data,
       {
         withCredentials: true,

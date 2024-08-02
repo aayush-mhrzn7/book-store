@@ -5,13 +5,14 @@ import config from "../config";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Loader from "../components/Loader";
-
+//import { useDebouncer } from "../hooks/useDebouncer";
 function AllBooks() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const payload = useSelector((state) => state.auth.data.role);
   const [admin, setAdmin] = useState(false);
   const navigate = useNavigate();
+
   useEffect(() => {
     const fetch = async () => {
       setLoading(true);
@@ -28,6 +29,7 @@ function AllBooks() {
       setAdmin(true);
     }
   }, [payload]);
+  const memoizedBooks = useMemo(() => books, [books]);
 
   return loading ? (
     <div className="h-[100vh] w-full flex items-center justify-center">
@@ -41,7 +43,7 @@ function AllBooks() {
       <div>
         <h1 className="text-4xl font-semibold mb-10 font-primary">All Books</h1>
         <div className="grid xl:grid-cols-4 grid-cols-2 gap-10  max-sm:grid-cols-1 mb-16">
-          {books.map((book, index) => (
+          {memoizedBooks.map((book, index) => (
             <div
               onClick={() => navigate(`/book/${book._id}`)}
               className=" hover:scale-110 transition-all font-primary border-2 w-full shadow-md p-4 rounded-lg "

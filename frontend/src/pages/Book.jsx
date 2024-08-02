@@ -23,7 +23,7 @@ function Book() {
   }, []);
   //getting admin
   const payload = useSelector((state) => state.auth.data);
-  console.log(payload);
+
   const [admin, setAdmin] = useState(false);
   useEffect(() => {
     if (payload.role != "admin") {
@@ -33,15 +33,25 @@ function Book() {
     }
   }, []);
   async function addToFavorate(id) {
-    console.log(id);
-    const response = await axios.patch(
+    await axios.patch(
       `${config.backendUrl}add-favorate/${id}`,
       {},
       {
         withCredentials: true,
       }
     );
-    console.log(response);
+
+    navigate("/favorates");
+  }
+  async function addToCart(id) {
+    await axios.patch(
+      `${config.backendUrl}add-cart/${id}`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
+
     navigate("/favorates");
   }
   async function DeleteBook(id) {
@@ -59,23 +69,20 @@ function Book() {
     } else alert("Error during deletind a book");
   }
   let favorate = payload.favorates.find((id) => id === book._id);
-  if (favorate) {
-    favorate = true;
-  } else {
-    favorate = false;
-  }
-  console.log(favorate);
+  if (favorate) favorate = true;
+  else favorate = false;
+
   return (
     <section className="w-full h-[90vh] p-10 font-primary">
-      <div className="flex gap-10">
-        <div className="w-1/3">
+      <div className="flex max-md:flex-col w-full gap-10">
+        <div className="  w-1/3 max-md:w-full">
           <h1 className="text-3xl font-semibold mb-8">{book.title}</h1>
           <span className=" mb-5 block">
             <strong className="text-[17px] inline ">Book id:</strong> {book._id}
           </span>
           <img src={book.url} className="w-full" alt="" />
         </div>
-        <div className="w-2/3">
+        <div className="w-2/3 max-md:w-full">
           <h3 className="text-2xl font-semibold mb-6">{book.author}</h3>
           <span className="capitalize font-semibold mb-3 inline-block p-3 bg-green-400  rounded-lg">
             {book.language}
@@ -105,7 +112,12 @@ function Book() {
             </>
           ) : (
             <div>
-              <button className=" cursor-pointer hover:scale-110 transition-all p-3 bg-blue-400 mr-4 rounded-lg font-semibold my-4">
+              <button
+                onClick={() => {
+                  addToCart(book._id);
+                }}
+                className=" cursor-pointer hover:scale-110 transition-all p-3 bg-blue-400 mr-4 rounded-lg font-semibold my-4"
+              >
                 Add to cart
               </button>
               {favorate ? (

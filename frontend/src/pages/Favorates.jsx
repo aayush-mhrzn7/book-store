@@ -15,7 +15,7 @@ function Favorates() {
         withCredentials: true,
       });
       setLoading(false);
-      console.log(response.data.books);
+
       setBooks(response.data.books);
     };
     fetch();
