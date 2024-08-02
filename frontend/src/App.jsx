@@ -9,6 +9,8 @@ import config from "./config";
 import axios from "axios";
 import { login } from "../store/authSlice";
 import Loader from "./components/Loader";
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Error = lazy(() => import("./pages/Error"));
 const Home = lazy(() => import("./pages/Home"));
 const AllBooks = lazy(() => import("./pages/AllBooks"));
 const Signup = lazy(() => import("./pages/Signup"));
@@ -107,6 +109,22 @@ function App() {
             element={
               <Authentication>
                 <Favorates />
+              </Authentication>
+            }
+          />
+          <Route
+            path="/dashboard"
+            element={
+              <Authentication>
+                <Dashboard />
+              </Authentication>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <Authentication>
+                <Error />
               </Authentication>
             }
           />

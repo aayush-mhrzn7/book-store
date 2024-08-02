@@ -17,7 +17,7 @@ router.post("/place-order", verifyJWT, async (req, res) => {
       });
       //clear cart
       await User.findByIdAndUpdate(id, {
-        $pop: { cart: orderData._id },
+        $pull: { cart: orderData._id },
       });
       return res
         .status(200)
@@ -42,31 +42,39 @@ router.get("/order-history", verifyJWT, async (req, res) => {
     return res.status(500).json({ message: "error occured" });
   }
 });
-router.patch("/update-status/:id", verifyJWT, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-    const user = await User.findById(req.user?._id);
-    if (user.role == "admin") {
-      await Order.findByIdAndUpdate(id, { status: status });
-      return res.status(200).json({ message: "status changed" });
-    }
-    return res.status(400).json({ message: "user is not authorized" });
-  } catch (error) {
-    return res.status(500).json({ message: "error occured" });
+router.patch("/update-status", verifyJWT, async (req, res) => {
+  /*  try { */
+
+  const { status, id } = req.body;
+  console.log(status);
+  const user = await User.findById(req.user?._id);
+  if (user.role == "admin") {
+    const orderrr = await Order.findById(id);
+    orderrr.status = status;
+    await orderrr.save();
+    console.log(orderrr);
+
+    const viewOrder = await Order.find({});
+    return res
+      .status(200)
+      .json({ order: viewOrder, message: "status changed" });
   }
+  return res.status(400).json({ message: "user is not authorized" });
+  /*  } catch (error) {
+    return res.status(500).json({ message: "error occured" });
+  } */
 });
-router.get("get-orders", verifyJWT, async (req, res) => {
+router.get("/get-orders", verifyJWT, async (req, res) => {
   try {
-    const userData = await User.findById(req.user?._id)
+    const order = await Order.find()
       .populate({
-        path: "Book",
+        path: "book",
       })
       .populate({
-        path: "User",
+        path: "user",
       })
       .sort({ createdAt: -1 });
-    return res.status(200).json({ data: userData, message: "sucess" });
+    return res.status(200).json({ data: order, message: "sucess" });
   } catch (error) {
     return res.status(500).json({ message: "error occured" });
   }

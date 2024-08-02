@@ -20,10 +20,21 @@ function Cart() {
   useEffect(() => {
     counterCartItems.current = cart.length;
   }, [cart]);
+
   const memoizedBooks = useMemo(() => cart, [cart]);
   const totalPrice = useMemo(() => {
     return cart.reduce((total, book) => total + book.price, 0);
   }, [cart]);
+  const placeAnOrder = async () => {
+    const response = await axios.post(
+      `${config.backendUrl}place-order`,
+      {
+        order: cart,
+      },
+      { withCredentials: true }
+    );
+    console.log(response);
+  };
   return (
     <div className="h-screen w-full font-primary p-10 ">
       <button className="mb-10 font-semibold text-xl " ref={counterCartItems}>
@@ -64,7 +75,10 @@ function Cart() {
         <div>
           <h3 className="font-semibold capitalize text-xl mt-4">Total Cost</h3>
           <p className="my-2 text-[17px]">{totalPrice}</p>
-          <button className=" hover:scale-105 transition-all  font-semibold p-3 w-full text-white  rounded-lg bg-blue-600">
+          <button
+            onClick={() => placeAnOrder()}
+            className=" hover:scale-105 transition-all  font-semibold p-3 w-full text-white  rounded-lg bg-blue-600"
+          >
             Order Books
           </button>
         </div>
